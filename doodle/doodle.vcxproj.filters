@@ -34,8 +34,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore">
+    <Image Include="images\background.png">
       <Filter>Исходные файлы</Filter>
-    </None>
+    </Image>
+    <Image Include="images\doodle.png">
+      <Filter>Исходные файлы</Filter>
+    </Image>
+    <Image Include="images\platform.png">
+      <Filter>Исходные файлы</Filter>
+    </Image>
   </ItemGroup>
 </Project>

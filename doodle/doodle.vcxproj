@@ -154,7 +154,9 @@
     <ClInclude Include="process.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
+    <Image Include="images\background.png" />
+    <Image Include="images\doodle.png" />
+    <Image Include="images\platform.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
