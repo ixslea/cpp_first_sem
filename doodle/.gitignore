@@ -43,7 +43,8 @@ dlldata.c
 
 
 
-
+*.lib
+*.dll
 *_i.c
 *_p.c
 *_h.h
