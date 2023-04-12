@@ -44,4 +44,7 @@
       <Filter>Исходные файлы</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
 </Project>
