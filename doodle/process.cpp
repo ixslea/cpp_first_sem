@@ -1,6 +1,5 @@
 #include "process.h"
 
-
 Process::Process(float n1, float n2, float n3, point platform, float n4) {
     y = n1;
     dy = n2;
@@ -9,7 +8,7 @@ Process::Process(float n1, float n2, float n3, point platform, float n4) {
     h = n4;
 }
 
-// Метод для постепенного пролистывания экрана
+// РњРµС‚РѕРґ РґР»СЏ РїРѕСЃС‚РµРїРµРЅРЅРѕРіРѕ РїСЂРѕР»РёСЃС‚С‹РІР°РЅРёСЏ СЌРєСЂР°РЅР°
 std::pair<float, float> Process::screenScrolling() {
     dy += 0.2;
     y += dy;
@@ -17,7 +16,7 @@ std::pair<float, float> Process::screenScrolling() {
     return {dy, y};
 }
 
-// Метод randomPlatforms - придание рандомных координат платформам
+// РњРµС‚РѕРґ randomPlatforms - РїСЂРёРґР°РЅРёРµ СЂР°РЅРґРѕРјРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚ РїР»Р°С‚С„РѕСЂРјР°Рј
 point Process::randomPlatforms() {
     for (int i = 0; i < 10; i++)
     {
@@ -27,7 +26,7 @@ point Process::randomPlatforms() {
     return plat[20];
 }
 
-// Метод standOnPlatforms - отработка отталкивания от платформ
+// РњРµС‚РѕРґ standOnPlatforms - РѕС‚СЂР°Р±РѕС‚РєР° РѕС‚С‚Р°Р»РєРёРІР°РЅРёСЏ РѕС‚ РїР»Р°С‚С„РѕСЂРј
 float Process::standOnPlatform() {
     for (int i = 0; i < 10; i++)
         if ((x + 50 > plat[i].x) && (x + 20 < plat[i].x + 68)
@@ -35,7 +34,7 @@ float Process::standOnPlatform() {
     return dy;
 }
 
-// Метод newPlatforms - создает новые платформы после прохождения прежних игроком
+// РњРµС‚РѕРґ newPlatforms - СЃРѕР·РґР°РµС‚ РЅРѕРІС‹Рµ РїР»Р°С‚С„РѕСЂРјС‹ РїРѕСЃР»Рµ РїСЂРѕС…РѕР¶РґРµРЅРёСЏ РїСЂРµР¶РЅРёС… РёРіСЂРѕРєРѕРј
 point Process::newPlatforms() {
     if (y < h)
         for (int i = 0; i < 10; i++)

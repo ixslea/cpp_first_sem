@@ -1,6 +1,6 @@
 #pragma once
 
-// Класс, запускающий игру
+// РљР»Р°СЃСЃ, Р·Р°РїСѓСЃРєР°СЋС‰РёР№ РёРіСЂСѓ
 class GameApplication {
 public:
     int run();
