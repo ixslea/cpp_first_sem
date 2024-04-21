@@ -1,11 +1,14 @@
 #include "process.h"
 
-Process::Process(float n1, float n2, float n3, point platform, float n4) {
+
+Process::Process(float n1, float n2, float n4, std::vector<std::pair<int, int>> plats) :
+    y(n1),
+    platforms()
+{
     y = n1;
     dy = n2;
-    x = n3;
-    plat[20] = platform;
     h = n4;
+    platforms = plats;
 }
 
 // Метод для постепенного пролистывания экрана
@@ -16,34 +19,44 @@ std::pair<float, float> Process::screenScrolling() {
     return {dy, y};
 }
 
-// Метод randomPlatforms - придание рандомных координат платформам
-point Process::randomPlatforms() {
+// Функция randomPlatforms - придание рандомных координат платформам
+void Process::randomPlatforms() {
     for (int i = 0; i < 10; i++)
     {
-        plat[i].x = rand() % 400;
-        plat[i].y = rand() % 533;
+        platforms[i].first = rand() % 400;
+        platforms[i].second = rand() % 533;
     }
-    return plat[20];
+    
 }
 
 // Метод standOnPlatforms - отработка отталкивания от платформ
-float Process::standOnPlatform() {
-    for (int i = 0; i < 10; i++)
-        if ((x + 50 > plat[i].x) && (x + 20 < plat[i].x + 68)
-            && (y + 70 > plat[i].y) && (y + 70 < plat[i].y + 14) && (dy > 0))  dy = -10;
+float Process::standOnPlatform(float x){
+    
+    for (int i = 0; i < 10; i++) {
+        if ((x + 50 > platforms[i].first) && (x + 20 < platforms[i].first + 68)
+            && (y + 70 > platforms[i].second) && (y + 70 < platforms[i].second + 14) && (dy > 0))
+        {
+            dy = -10;
+        }
+    }
     return dy;
 }
 
-// Метод newPlatforms - создает новые платформы после прохождения прежних игроком
-point Process::newPlatforms() {
+// Функция newPlatforms - создает новые платформы после прохождения прежних игроком
+void Process::newPlatforms() {
     if (y < h)
-        for (int i = 0; i < 10; i++)
-        {
-            y = h;
-            plat[i].y = plat[i].y - dy;
-            if (plat[i].y > 533) { plat[i].y = 0; plat[i].y = rand() % 400; }
+        for (int i = 0; i < 10; i++) {
+            {
+                y = h;
+                platforms[i].second = platforms[i].second - dy;
+                if (platforms[i].second > 533) { platforms[i].second = 0; platforms[i].first = rand() % 400; }
+            }
         }
-    return plat[20];
 }
 
+// Метод drawPlatforms - отрисовка платформ
+sf::Sprite Process::drawPlatforms(sf::Sprite sPlat, int i) {
+    sPlat.setPosition(platforms[i].first, platforms[i].second);
+    return sPlat;
+}
 

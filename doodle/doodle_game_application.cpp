@@ -4,79 +4,90 @@
 #include <time.h>
 
 namespace {
-    // Рендеринг окна
-    sf::RenderWindow app(sf::VideoMode(400, 533), "Doodle Jump");
+// Р РµРЅРґРµСЂРёРЅРі РѕРєРЅР°
+sf::RenderWindow app(sf::VideoMode(400, 533), "Doodle Jump");
 }
 
-// Функция процесса игры
+// РњРµС‚РѕРґ РїРѕРґРіРѕС‚РѕРІРєРё: Р·Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ
+std::vector<sf::Texture> GameApplication::preparing()
+{
+    sf::Texture t1, t2, t3;
+    t1.loadFromFile("images/background.png");
+    t2.loadFromFile("images/platform.png");
+    t3.loadFromFile("images/doodle.png");
+    std::vector<sf::Texture> textures = {t1, t2, t3};
+    return textures;
+}
+
+
+// Р¤СѓРЅРєС†РёСЏ РїСЂРѕС†РµСЃСЃР° РёРіСЂС‹
 int GameApplication::run()
 {
-    {
-        srand(time(0));
-        app.setFramerateLimit(60);
+    srand(time(0));
+    app.setFramerateLimit(60);
 
-        // Переменные: x, y, h - координаты платформ, dx, dy - координаты игрока
-        float x = 100, y = 100, h = 200;
-        float dx = 0, dy = 0;
+    // РџРµСЂРµРјРµРЅРЅС‹Рµ: x, y, h - РєРѕРѕСЂРґРёРЅР°С‚С‹ РёРіСЂРѕРєР°, dx, dy - СЃРјРµС‰РµРЅРёРµ
+    float x = 100, y = 100, h = 200;
+    float dx = 0, dy = 0;
 
-        // Платформы
-        point plat[20];
+    // РџР»Р°С‚С„РѕСЂРјС‹
+    std::vector<std::pair<int, int>> platforms(10);
 
-        Process proc(y, dy, x, plat[20], h);
+    // Р­РєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° Process
+    Process proc(y, dy, h, platforms);
 
-        // Загрузка текстур заднего фона, платформы, игрока и преобразование в спрайты
-        sf::Texture t1, t2, t3;
-        t1.loadFromFile("images/background.png");
-        t2.loadFromFile("images/platform.png");
-        t3.loadFromFile("images/doodle.png");
-        sf::Sprite sBackground(t1), sPlat(t2), sPers(t3);
+    //Р—Р°РіСЂСѓР·РєР° С‚РµРєСЃС‚СѓСЂ Рё СЃРѕР·РґР°РЅРёРµ СЃРїСЂР°Р№С‚РѕРІ
+    std::vector<sf::Texture> textures = preparing();
+    sf::Sprite sBackground(textures[0]),
+                sPlat(textures[1]),
+                sPers(textures[2]);
 
-        // Метод randomPlatforms - придание рандомных координат платформам
-        plat[20] = proc.randomPlatforms();
+    // РњРµС‚РѕРґ randomPlatforms - РїСЂРёРґР°РЅРёРµ СЂР°РЅРґРѕРјРЅС‹С… РєРѕРѕСЂРґРёРЅР°С‚ РїР»Р°С‚С„РѕСЂРјР°Рј
+    proc.randomPlatforms();
         
-        // Процесс игры
-        while (app.isOpen())
+    // РџСЂРѕС†РµСЃСЃ РёРіСЂС‹
+    while (app.isOpen())
+    {
+        // Р—Р°РєСЂС‹С‚РёРµ РёРіСЂС‹
+        sf::Event e;
+        while (app.pollEvent(e))
         {
-            // Закрытие игры
-            sf::Event e;
-            while (app.pollEvent(e))
-            {
-                if (e.type == sf::Event::Closed)
-                    app.close();
-            }
-
-            // Движение игрока - реакция на зажатые клавиши
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) x += 3;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) x -= 3;
-
-            // Метод для постепенного пролистывания экрана
-            auto dy_y = proc.screenScrolling();
-            dy = dy_y.first;
-            y = dy_y.second;
-            
-            // Метод newPlatforms - создает новые платформы после прохождения прежних игроком
-            plat[20] = proc.newPlatforms();
-
-            // Метод standOnPlatforms - отработка отталкивания от платформ
-            dy = proc.standOnPlatform();
-            
-            // Задание позиции персонажа
-            sPers.setPosition(x, y);
-
-            // Отрисовка персонажа и заднего фона
-            app.draw(sBackground);
-            app.draw(sPers);
-
-            // Отрисовка платформ
-            for (int i = 0; i < 10; i++)
-            {
-                sPlat.setPosition(plat[i].x, plat[i].y);
-                app.draw(sPlat);
-            }
-
-            app.display();
+            if (e.type == sf::Event::Closed)
+                app.close();
         }
 
-        return 0;
+        // Р”РІРёР¶РµРЅРёРµ РёРіСЂРѕРєР° - СЂРµР°РєС†РёСЏ РЅР° Р·Р°Р¶Р°С‚С‹Рµ РєР»Р°РІРёС€Рё
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) x += 3;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) x -= 3;
+
+        // РњРµС‚РѕРґ РґР»СЏ РїРѕСЃС‚РµРїРµРЅРЅРѕРіРѕ РїСЂРѕР»РёСЃС‚С‹РІР°РЅРёСЏ СЌРєСЂР°РЅР°
+        auto dy_y = proc.screenScrolling();
+        dy = dy_y.first;
+        y = dy_y.second;
+
+
+        // Р¤СѓРЅРєС†РёСЏ newPlatforms - СЃРѕР·РґР°РµС‚ РЅРѕРІС‹Рµ РїР»Р°С‚С„РѕСЂРјС‹ РїРѕСЃР»Рµ РїСЂРѕС…РѕР¶РґРµРЅРёСЏ РїСЂРµР¶РЅРёС… РёРіСЂРѕРєРѕРј
+        proc.newPlatforms();
+
+        // РњРµС‚РѕРґ standOnPlatforms - РѕС‚СЂР°Р±РѕС‚РєР° РѕС‚С‚Р°Р»РєРёРІР°РЅРёСЏ РѕС‚ РїР»Р°С‚С„РѕСЂРј
+        dy = proc.standOnPlatform(x);
+            
+        // Р—Р°РґР°РЅРёРµ РїРѕР·РёС†РёРё РїРµСЂСЃРѕРЅР°Р¶Р°
+        sPers.setPosition(x, y);
+
+        // РћС‚СЂРёСЃРѕРІРєР° РїРµСЂСЃРѕРЅР°Р¶Р° Рё Р·Р°РґРЅРµРіРѕ С„РѕРЅР°
+        app.draw(sBackground);
+            
+
+        // РћС‚СЂРёСЃРѕРІРєР° РїР»Р°С‚С„РѕСЂРј
+        for (int i = 0; i < 10; i++)
+        {
+            sPlat = proc.drawPlatforms(sPlat, i);
+            app.draw(sPlat);
+        }
+        app.draw(sPers);
+        app.display();
     }
+
+    return 0;
 };
