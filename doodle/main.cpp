@@ -3,5 +3,5 @@
 int main()
 {
 	GameApplication app;
-	return app.run(); // Запуск игры
+	return app.run(); // Р—Р°РїСѓСЃРє РёРіСЂС‹
 }
